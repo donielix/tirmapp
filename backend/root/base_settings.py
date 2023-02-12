@@ -10,6 +10,7 @@ INSTALLED_APPS = [
     # apps
     "users",
     # 3rd party packages
+    "rest_framework",
     "django_extensions",
 ]
 
@@ -91,3 +92,11 @@ SHELL_PLUS_PRINT_SQL = True
 
 # To disable truncation of sql queries use
 SHELL_PLUS_PRINT_SQL_TRUNCATE = None
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
