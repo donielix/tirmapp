@@ -1,9 +1,13 @@
 import re
+from collections import OrderedDict
 from typing import Dict
+
 from django.test import TestCase
-from .serializers import UserSerializer
-from .models import Address, User
+from freezegun import freeze_time
 from rest_framework.exceptions import ValidationError
+
+from .models import Address, User
+from .serializers import AddressSerializer, UserSerializer
 
 
 class TestUserSerializer(TestCase):
@@ -16,6 +20,9 @@ class TestUserSerializer(TestCase):
         }
 
     def assert_raises_validation_error(self, data: Dict, msg: str, ignore_case: bool = True):
+        """
+        Asserts that the given JSON data throws a `ValidationError` during DRF Serializer validation
+        """
         if ignore_case:
             error = re.compile(msg, flags=re.I)
         else:
@@ -24,12 +31,35 @@ class TestUserSerializer(TestCase):
         with self.assertRaisesRegex(expected_exception=ValidationError, expected_regex=error):
             user_ser.is_valid(raise_exception=True)
 
+    @freeze_time("2020-01-01")
     def test_add_user_with_all_right_params(self):
+        # De-serialization
         user_ser = UserSerializer(data=self.data)
         user_ser.is_valid(raise_exception=True)
         user_ser.save()
-        self.assertTrue(User.objects.exists())
-        self.assertTrue(Address.objects.exists())
+        # Serialization
+        user_obj = UserSerializer(User.objects.get()).data
+        address_obj = AddressSerializer(Address.objects.get()).data
+
+        expected_user_obj = {
+            "id": 1,
+            "address": OrderedDict([("id", 1), ("tower", 1), ("floor", 3), ("door", "A")]),
+            "password": "test",
+            "last_login": None,
+            "is_superuser": False,
+            "username": "test-user",
+            "first_name": "",
+            "last_name": "",
+            "email": "test@test.com",
+            "is_staff": False,
+            "is_active": True,
+            "date_joined": "2020-01-01T00:00:00Z",
+            "groups": [],
+            "user_permissions": [],
+        }
+        expected_address_obj = {"id": 1, "tower": 1, "floor": 3, "door": "A"}
+        self.assertDictEqual(user_obj, expected_user_obj)
+        self.assertDictEqual(address_obj, expected_address_obj)
 
     def test_add_user_with_no_username(self):
         data = self.data.copy()
