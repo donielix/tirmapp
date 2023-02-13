@@ -15,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+        extra_kwargs = {"email": {"required": True}}
 
     def create(self, validated_data: Dict):
         address_data: Dict = validated_data.pop("address")

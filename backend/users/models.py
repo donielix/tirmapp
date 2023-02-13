@@ -15,4 +15,3 @@ class Address(models.Model):
 
 class User(AbstractUser):
     address = models.OneToOneField(Address, on_delete=models.CASCADE)
-    REQUIRED_FIELDS = ["email", "address"]
