@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: django
+      POSTGRES_USER: django
+      POSTGRES_DB: django
+      PGPORT: 2345
+    ports:
+      - 2345:2345
+
+volumes:
+  pg_data:

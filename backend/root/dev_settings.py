@@ -35,6 +35,6 @@ DATABASES = {
         "USER": "django",
         "PASSWORD": "django",
         "HOST": "localhost",
-        "PORT": 5432,
+        "PORT": 2345,
     }
 }
