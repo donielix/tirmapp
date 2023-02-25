@@ -13,10 +13,11 @@ class Address(models.Model):
                 check=models.Q(tower__in=[1, 2, 3, 4, 5, 6]), name="tower_values"
             ),
             models.CheckConstraint(check=models.Q(door__length__gt=0), name="door_min_length"),
+            models.UniqueConstraint(fields=["tower", "floor", "door"], name="unique_address"),
         ]
 
-    tower = models.SmallIntegerField()
-    floor = models.SmallIntegerField()
+    tower = models.PositiveSmallIntegerField()
+    floor = models.PositiveSmallIntegerField()
     door = models.CharField(max_length=2)
 
 
