@@ -17,6 +17,7 @@ class TestUserSerializer(TestCase):
             "email": "test@test.com",
             "address": {"tower": 1, "floor": 3, "door": "A"},
             "password": "test",
+            "password2": "test",
         }
 
     def assert_raises_validation_error(self, data: Dict, msg: str, ignore_case: bool = True):
